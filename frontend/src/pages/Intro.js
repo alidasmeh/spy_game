@@ -1,24 +1,20 @@
 import React from 'react';
 import { Container, Button } from 'react-bootstrap';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import axiosInstance from '../api/backendInstance'
 
 function IntroPage() {
+  const navigate = useNavigate();
+
   const handleConsent = () => {
-    alert("Go to the next page");
-    callBackend()
+    navigate('/register');
+    // callBackend()
   }
 
   const handleReject = () => {
     alert("Sorry !")
   }
-
-  const callBackend = async () =>{
-    const response = await axiosInstance.get('/hi');
-    console.log(`callBackend `, response.data)
-  }
-
-
 
   return (
     <Container className='mt-5'>
