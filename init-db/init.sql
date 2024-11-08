@@ -3,27 +3,38 @@ CREATE DATABASE spy_game;
 \c spy_game
 
 CREATE TABLE players (
-    id SERIAL PRIMARY KEY,
+    player_id SERIAL PRIMARY KEY,
+    socket_id VARCHAR(50) NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    image_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE grounds (
-    id SERIAL PRIMARY KEY,
-    description TEXT,
+CREATE TABLE games (
+    game_id SERIAL PRIMARY KEY,
+    number_of_players INTEGER DEFAULT 4,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE words (
+    word_id SERIAL PRIMARY KEY,
+    target_word TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE rounds (
-    id SERIAL PRIMARY KEY,
-    target_word TEXT NOT NULL,
-    ground_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ground_id) REFERENCES grounds(id)
+    round_id SERIAL PRIMARY KEY,
+    target_word_id VARCHAR(10) NOT NULL,
+    game_id VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert sample data
-INSERT INTO players (username, email) VALUES
-    ('testuser1', 'test1@example.com'),
-    ('testuser2', 'test2@example.com');
+CREATE TABLE trials (
+    trial_id SERIAL PRIMARY KEY,
+    round_id VARCHAR(10),
+    questioner_id VARCHAR(10),
+    answerer_id VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO words (target_word) VALUES ('car wheel'), ('cruise');
