@@ -7,6 +7,7 @@ CREATE TABLE players (
     socket_id VARCHAR(50) NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     image_url VARCHAR(255),
+    game_id VARCHAR(10),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
