@@ -1,17 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Button, Form } from 'react-bootstrap';
 
 import axiosInstance from '../api/backendInstance'
+
+import {socket} from '../api/socket'
 
 function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [prompt, setPrompt] = useState('');
     const [coverImage, setCoverImage] = useState('');
 
-    const handleSubmit = () => {
+    useEffect(()=>{
+        socket.connect();
+
+        socket.on('connect', ()=>{
+            console.log("socket connect is called")
+        })
+        socket.on("connect successfully", (data)=>{
+            console.log(`here in connect successfully event`, data)
+        })
+
+    }, [])
+    
+    
+    const handleSubmit = async () => {
         console.log("Username:", username);
         console.log("Prompt:", prompt);
         console.log('coverImage', coverImage)
+
+        const data = {
+            username, 
+            conver_image: coverImage
+        }
     };
 
     const handlePromptToGenerate = ()=>{
