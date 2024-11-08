@@ -9,6 +9,9 @@ function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [prompt, setPrompt] = useState('');
     const [coverImage, setCoverImage] = useState('');
+    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
+    const [formDisabled, setFormDisabled] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(()=>{
         socket.connect();
@@ -16,27 +19,37 @@ function RegistrationPage() {
         socket.on('connect', ()=>{
             console.log("socket connect is called")
         })
-        socket.on("connect successfully", (data)=>{
-            console.log(`here in connect successfully event`, data)
-        })
 
+        socket.on('register response', (data)=>{
+            console.log("register done is called.", data)
+            if(data.status == false){
+                setRegisterButtonDisabled(false)
+                setFormDisabled(false)
+                return alert("error "+ data.message)
+            }
+            
+            console.log("player_id : "+data.player_id)
+            setMessage("Waiting for other players...")
+        })
+        
     }, [])
     
     
     const handleSubmit = async () => {
-        console.log("Username:", username);
-        console.log("Prompt:", prompt);
-        console.log('coverImage', coverImage)
-
         const data = {
             username, 
-            conver_image: coverImage
+            cover_image: coverImage
         }
+        
+        setRegisterButtonDisabled(true)
+        setFormDisabled(true)
+        await socket.emit("register", data)
     };
 
     const handlePromptToGenerate = ()=>{
-        alert("generate image")
+        // alert("generate image")
         setCoverImage("is set")
+        setRegisterButtonDisabled(false)
     }
 
     return (
@@ -50,6 +63,7 @@ function RegistrationPage() {
                         placeholder="Enter your username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        disabled={formDisabled}
                     />
                 </Form.Group>
 
@@ -60,13 +74,17 @@ function RegistrationPage() {
                         placeholder="Enter the prompt to generate cover image"
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
+                        disabled={formDisabled}
                     />
                 </Form.Group>
                 
-                <Button variant="primary" className='mt-2' onClick={handlePromptToGenerate}>Generate</Button>
+                <Button variant="primary" className='mt-2' onClick={handlePromptToGenerate} disabled={formDisabled}>Generate</Button>
                 <hr/>
                 <div className='text-center'>
-                    <Button variant="success" onClick={handleSubmit}>Register</Button>
+                    <Button variant="success" onClick={handleSubmit} disabled={registerButtonDisabled}>Register</Button>
+                </div>
+                <div className='text-center'>
+                    {message}
                 </div>
             </div>
         </Container>

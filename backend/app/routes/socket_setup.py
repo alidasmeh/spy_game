@@ -1,6 +1,13 @@
 import socketio
 
 
+from services.player import create_new_user, update_game_id
+from services.game import find_an_empty_game
+
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 sio_server = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins=[]
@@ -14,4 +21,25 @@ sio_app = socketio.ASGIApp(
 @sio_server.on("connect")
 async def connect(sid, environ, auth):
     print(f'Client connected: {sid}')
-    await sio_server.emit('connect successfully', {"status": True}, sid)
+
+@sio_server.on("register")
+async def register(sid, data):
+    logger.info(f'register is called: {sid}')
+
+    result = await create_new_user(data['username'], data['cover_image'], sid)
+
+    if (result['status']==True):
+        player_id = result['player_id']
+        game_id = await find_an_empty_game()
+        
+        status = await update_game_id(player_id, game_id)
+
+        if status == True:
+            await sio_server.emit("register response", {"status": True, "player_id": player_id, "game_id": game_id }, sid)
+        else:
+            await sio_server.emit("register response", {"status": False, "message": "There was an error with updating user record."}, sid)
+        
+    else:
+        await sio_server.emit("register response", result, sid)
+
+    
