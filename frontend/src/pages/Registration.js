@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import { Container, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import axiosInstance from '../api/backendInstance'
 
 import {socket} from '../api/socket'
 
-function RegistrationPage() {
+function RegistrationPage({setGameId, setPlayerId}) {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
     const [prompt, setPrompt] = useState('');
     const [coverImage, setCoverImage] = useState('');
@@ -20,7 +23,7 @@ function RegistrationPage() {
             console.log("socket connect is called")
         })
 
-        socket.on('register response', (data)=>{
+        socket.on('register response', async (data)=>{
             console.log("register done is called.", data)
             if(data.status == false){
                 setRegisterButtonDisabled(false)
@@ -29,7 +32,16 @@ function RegistrationPage() {
             }
             
             console.log("player_id : "+data.player_id)
+            setPlayerId(data.player_id)
+            console.log("game_id : "+data.game_id)
+            setGameId(data.game_id)
             setMessage("Waiting for other players...")
+
+            await isGameFull(data.game_id)
+        })
+
+        socket.on('game is full', ()=>{
+            navigate("/game")
         })
         
     }, [])
@@ -47,9 +59,12 @@ function RegistrationPage() {
     };
 
     const handlePromptToGenerate = ()=>{
-        // alert("generate image")
         setCoverImage("is set")
         setRegisterButtonDisabled(false)
+    }
+
+    const isGameFull = async (gameId)=>{
+        await socket.emit("is game full", {game_id: gameId})
     }
 
     return (

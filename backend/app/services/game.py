@@ -41,3 +41,15 @@ async def create_new_game():
     except Exception as e:
         logger.error(e)
         return {"status": False, "message": "db error. "}
+    
+async def is_game_full(game_id):
+    conn = await connect_to_db()
+    game = await conn.fetch("SELECT * FROM games WHERE game_id=$1", game_id)
+    number_of_players = game[0]['number_of_players']
+
+    players = await conn.fetch("SELECT * FROM players WHERE game_id=$1", str(game_id))
+
+    if len(players) == int(number_of_players):
+        return {"status": True, "players": players}
+    
+    return {"status": False}

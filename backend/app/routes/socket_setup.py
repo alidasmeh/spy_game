@@ -2,7 +2,7 @@ import socketio
 
 
 from services.player import create_new_user, update_game_id
-from services.game import find_an_empty_game
+from services.game import find_an_empty_game, is_game_full
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -42,4 +42,13 @@ async def register(sid, data):
     else:
         await sio_server.emit("register response", result, sid)
 
+@sio_server.on("is game full")
+async def check_is_game_full(sid, data):
+    logger.info(f'is_game_full is called: {sid}')
+    logger.info(data)
+    result = await is_game_full(data['game_id'])
     
+    if result['status']==True:
+        for player in result['players']:
+            await sio_server.emit("game is full", {"status": True}, player['socket_id'])
+   
