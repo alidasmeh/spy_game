@@ -14,6 +14,7 @@ CREATE TABLE players (
 CREATE TABLE games (
     game_id SERIAL PRIMARY KEY,
     number_of_players INTEGER DEFAULT 4,
+    done VARCHAR(10) NOT NULL DEFAULT 'false',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,6 +28,7 @@ CREATE TABLE rounds (
     round_id SERIAL PRIMARY KEY,
     target_word_id VARCHAR(10) NOT NULL,
     game_id VARCHAR(10) NOT NULL,
+    done VARCHAR(10) NOT NULL DEFAULT 'false',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,6 +37,9 @@ CREATE TABLE trials (
     round_id VARCHAR(10),
     questioner_id VARCHAR(10),
     answerer_id VARCHAR(10),
+    word1 VARCHAR(200) NOT NULL,
+    word2 VARCHAR(200) NOT NULL,
+    chosen_word VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

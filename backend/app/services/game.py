@@ -62,6 +62,48 @@ async def get_players_by_group_id(game_id):
     player_dicts = [dict(player) for player in players]
     return convert_date_object_to_string(player_dicts)
 
+async def who_is_turn_by_group_id(game_id):
+    conn = await connect_to_db()
+
+    last_round = await conn.fetch("SELECT * FROM rounds WHERE game_id=$1 ORDER BY round_id DESC LIMIT 1", str(game_id))
+    
+    if len(last_round) == 0:
+        # create new round
+        target_word_id = await find_word_for_this_group(conn, game_id)
+        last_round = await conn.fetch("INSERT INTO rounds (target_word_id, game_id) VALUES ($1, $2) RETURNING round_id ", str(target_word_id), str(game_id))
+        trials_for_current_round = [] # round is just created so there is no trial for that. 
+
+    else: 
+        last_round_id = last_round[0]['round_id']
+        trials_for_current_round = await conn.fetch("SELECT * FROM trials WHERE round_id=$1 ORDER BY trial_id ASC", str(last_round_id))
+    
+    players_for_current_game = await conn.fetch("SELECT player_id FROM players WHERE game_id=$1 ORDER BY player_id ASC", str(game_id))
+
+    if len(trials_for_current_round) == 0:
+        return players_for_current_game[0]['player_id']
+    
+    index_for_finding_player_turn = len(trials_for_current_round)%4
+    return players_for_current_game[index_for_finding_player_turn]['player_id']
+
+async def run_a_trial(data):
+    conn = await connect_to_db()
+
+    last_round = await conn.fetch("SELECT * FROM rounds WHERE game_id=$1 ORDER BY round_id DESC LIMIT 1", str(data['game_id']))
+    new_trial_id = await conn.fetch("INSERT INTO trials (round_id, questioner_id, answerer_id, word1, word2) VALUES ($1, $2, $3, $4, $5) RETURNING trial_id ", str(last_round[0]['round_id']), str(data['player_id']), str(data['target_player']), str(data['word1']), str(data['word2']))
+
+    return new_trial_id
+
+async def update_trial(trial_id, word):
+    conn = await connect_to_db()
+
+    try: 
+        await conn.execute("UPDATE trials SET chosen_word=$1 WHERE trial_id=$2", str(word) , str(trial_id))
+        return True
+    
+    except asyncpg.exceptions.PostgresError as e:
+        logger.error(f"update_trial > Error updating trial chosen_word: {e}")
+        return False
+
 
 def convert_date_object_to_string(original_list):
     player_dicts = []
@@ -73,3 +115,19 @@ def convert_date_object_to_string(original_list):
         player_dicts.append(player_dict)
 
     return player_dicts
+
+async def find_word_for_this_group(conn, game_id):
+    rounds = await conn.fetch("SELECT * FROM rounds WHERE game_id=$1", str(game_id))
+    words = await conn.fetch("SELECT word_id FROM words")
+
+    target_word = ""
+    for word in words: 
+        target_word = word["word_id"]
+        for round in rounds: 
+            if word["word_id"] == round['target_word_id']:
+                target_word = ""
+
+    if target_word == "":
+        return "not found"
+
+    return target_word

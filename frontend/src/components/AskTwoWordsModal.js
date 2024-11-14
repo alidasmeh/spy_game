@@ -12,16 +12,17 @@ function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, pl
 
     const handleClose = () => setIsModalOpen(false);
     
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Handle form submission with word1 and word2 values
         let data = {
-            gameId,
-            playerId,
-            targetPlayer,
-            word1,
-            word2
+            game_id: gameId,
+            player_id: playerId,
+            target_player: targetPlayer,
+            word1: word1,
+            word2: word2
         }
-        console.log(`question data`, data)
+        console.log(`run a trial with `, data)
+        await socket.emit("run a trial", data)
         // handleClose();
     };
 

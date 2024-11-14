@@ -63,3 +63,57 @@ async def get_players_for_group(sid, data):
         
     for player in players:
         await sio_server.emit("list of players", players, to=player['socket_id'])  
+
+@sio_server.on("who is turn")
+async def who_is_turn(sid, data):
+    logger.info(f'who_is_turn is called: {sid}')
+    logger.info(data)
+    player_id = await services.game.who_is_turn_by_group_id(data['game_id'])
+    logger.info(f'player_id turn:')
+    logger.info(player_id)
+    
+    players = await services.game.get_players_by_group_id(data['game_id'])
+    for player in players:
+        await sio_server.emit("turn is for playerid", {"player_id" : player_id}, to=player['socket_id'])
+
+@sio_server.on("run a trial")
+async def run_a_trial(sid, data):
+    logger.info(f'run_a_trial is called: {sid}')
+    logger.info(data)
+    trial_id = await services.game.run_a_trial(data)
+
+    data['trial_id'] = trial_id[0]['trial_id']
+    logger.info('data output')
+    logger.info(data)
+
+    players = await services.game.get_players_by_group_id(data['game_id'])
+    for player in players:
+        if player['player_id'] == data['player_id']:
+           data['player_username'] = player['username']
+           
+        if player['player_id'] == data['target_player']:
+           data['target_username'] = player['username']
+
+    for player in players:
+        await sio_server.emit("trial is run", data, to=player['socket_id'])
+
+@sio_server.on("one word is chosen")
+async def temp(sid, data):
+    logger.info(f'one word is chosen is called: {sid}')
+    logger.info(data)
+    
+    result = await services.game.update_trial(data['trial_id'], data['word'])
+
+    players = await services.game.get_players_by_group_id(data['game_id'])
+    for player in players:
+        await sio_server.emit("announce chosen word", data, to=player['socket_id'])  
+
+# @sio_server.on("temp")
+# async def temp(sid, data):
+#     logger.info(f'get_players_for_group is called: {sid}')
+#     logger.info(data)
+#     players = await services.game.get_players_by_group_id(data['game_id'])
+#     logger.info('players')
+#     logger.info(players)    
+#     for player in players:
+#         await sio_server.emit("list of players", players, to=player['socket_id'])  

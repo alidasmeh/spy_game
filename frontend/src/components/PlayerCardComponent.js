@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 // import axiosInstance from '../api/backendInstance'
 import {socket} from '../api/socket'
 
-function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsModalOpen}) {
+function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsModalOpen, playerTurn}) {
 
   const [backgroundForThisCard, setBackgroundForThisCard] = useState({})
   const [showCanBeChosenButton, setCanBeChosenButton] = useState(false)
@@ -13,13 +13,22 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
   
   useEffect(()=>{
     const thisCardIsForTheCurrentPlayer = playerInfo.player_id == thisPlayerId
+    const nowIsCurrentPlayerTurn = thisPlayerId == playerTurn
+    const nowThisCardIsTurn = playerInfo.player_id == playerTurn
+
     if(thisCardIsForTheCurrentPlayer){
       setBackgroundForThisCard({background: "#eee"})
     }else{
-      setCanBeChosenButton(true)
+      if( nowIsCurrentPlayerTurn ) setCanBeChosenButton(true)
     }
 
-  }, [])
+    if(nowThisCardIsTurn){
+      setBackgroundForThisCard({background: "#d9eeff"})
+    }
+
+    
+
+  }, [playerTurn])
   
   const askThisUser = (player_id)=>{
     setIsModalOpen(true)
@@ -33,7 +42,7 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
         <div>
           <div style={styles.imgCicle} ><img src={playerInfo.image_url} style={styles.img}/></div>
         </div>
-        <p className='text-center'>{playerInfo.username}</p> 
+        <p className='text-center'>{playerInfo.username} <br/> (player_id : {playerInfo.player_id})</p> 
 
         {
           showCanBeChosenButton && 
