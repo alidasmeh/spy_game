@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import IntroPage from './Intro';
 import RegistrationPage from './Registration';
-import MainGamePage from './game';
+import MainGamePage from './Game';
 
 function RoutingPage() {
 
