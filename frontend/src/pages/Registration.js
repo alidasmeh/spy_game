@@ -59,7 +59,7 @@ function RegistrationPage({setGameId, setPlayerId}) {
     };
 
     const handlePromptToGenerate = ()=>{
-        setCoverImage("is set")
+        setCoverImage("/img/unknown.png")
         setRegisterButtonDisabled(false)
     }
 
