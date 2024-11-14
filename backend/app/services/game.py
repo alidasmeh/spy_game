@@ -1,8 +1,10 @@
+import datetime
 from fastapi import Depends
 from models.db import get_db_connection, connect_to_db
 import asyncpg
 from asyncpg import Connection
 from fastapi import FastAPI, Depends, HTTPException, status
+# import helpers
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -53,3 +55,21 @@ async def is_game_full(game_id):
         return {"status": True, "players": players}
     
     return {"status": False}
+
+async def get_players_by_group_id(game_id):
+    conn = await connect_to_db()
+    players = await conn.fetch("SELECT * FROM players WHERE game_id=$1", str(game_id))
+    player_dicts = [dict(player) for player in players]
+    return convert_date_object_to_string(player_dicts)
+
+
+def convert_date_object_to_string(original_list):
+    player_dicts = []
+    for record in original_list:
+        player_dict = {}
+        for key, value in record.items():
+            if not isinstance(value, datetime.datetime):
+                player_dict[key] = value
+        player_dicts.append(player_dict)
+
+    return player_dicts

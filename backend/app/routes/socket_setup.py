@@ -1,8 +1,7 @@
 import socketio
 
-
-from services.player import create_new_user, update_game_id
-from services.game import find_an_empty_game, is_game_full
+import services.player
+import services.game
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -26,13 +25,13 @@ async def connect(sid, environ, auth):
 async def register(sid, data):
     logger.info(f'register is called: {sid}')
 
-    result = await create_new_user(data['username'], data['cover_image'], sid)
+    result = await services.player.create_new_user(data['username'], data['cover_image'], sid)
 
     if (result['status']==True):
         player_id = result['player_id']
-        game_id = await find_an_empty_game()
+        game_id = await services.game.find_an_empty_game()
         
-        status = await update_game_id(player_id, game_id)
+        status = await services.player.update_game_id(player_id, game_id)
 
         if status == True:
             await sio_server.emit("register response", {"status": True, "player_id": player_id, "game_id": game_id }, sid)
@@ -46,9 +45,21 @@ async def register(sid, data):
 async def check_is_game_full(sid, data):
     logger.info(f'is_game_full is called: {sid}')
     logger.info(data)
-    result = await is_game_full(data['game_id'])
+    result = await services.game.is_game_full(data['game_id'])
     
     if result['status']==True:
         for player in result['players']:
-            await sio_server.emit("game is full", {"status": True}, player['socket_id'])
-   
+            await sio_server.emit("game is full", {"status": True}, player['socket_id'])  
+
+@sio_server.on("get players for group")
+async def get_players_for_group(sid, data):
+    logger.info(f'get_players_for_group is called: {sid}')
+    logger.info(data)
+    players = await services.game.get_players_by_group_id(data['game_id'])
+
+    logger.info('players')
+    logger.info(players)
+    
+        
+    for player in players:
+        await sio_server.emit("list of players", players, to=player['socket_id'])  
