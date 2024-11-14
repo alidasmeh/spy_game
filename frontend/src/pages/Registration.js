@@ -11,8 +11,8 @@ function RegistrationPage({setGameId, setPlayerId}) {
 
     const [username, setUsername] = useState('');
     const [prompt, setPrompt] = useState('');
-    const [coverImage, setCoverImage] = useState('');
-    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
+    const [coverImage, setCoverImage] = useState('/img/unknown.png');
+    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
     const [formDisabled, setFormDisabled] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -82,7 +82,7 @@ function RegistrationPage({setGameId, setPlayerId}) {
                     />
                 </Form.Group>
 
-                <Form.Group controlId="formPrompt" className='mt-4'>
+                {/* <Form.Group controlId="formPrompt" className='mt-4'>
                     <Form.Label>Prompt to Generate Cover Image</Form.Label>
                     <Form.Control
                         type="text"
@@ -93,7 +93,7 @@ function RegistrationPage({setGameId, setPlayerId}) {
                     />
                 </Form.Group>
                 
-                <Button variant="primary" className='mt-2' onClick={handlePromptToGenerate} disabled={formDisabled}>Generate</Button>
+                <Button variant="primary" className='mt-2' onClick={handlePromptToGenerate} disabled={formDisabled}>Generate</Button> */}
                 <hr/>
                 <div className='text-center'>
                     <Button variant="success" onClick={handleSubmit} disabled={registerButtonDisabled}>Register</Button>
