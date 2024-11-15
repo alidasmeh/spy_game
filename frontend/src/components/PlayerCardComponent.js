@@ -16,17 +16,18 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     const nowIsCurrentPlayerTurn = thisPlayerId == playerTurn
     const nowThisCardIsTurn = playerInfo.player_id == playerTurn
 
-    if(thisCardIsForTheCurrentPlayer){
-      setBackgroundForThisCard({background: "#eee"})
-    }else{
-      if( nowIsCurrentPlayerTurn ) setCanBeChosenButton(true)
-    }
-
     if(nowThisCardIsTurn){
       setBackgroundForThisCard({background: "#d9eeff"})
+    }else if(thisCardIsForTheCurrentPlayer){
+      setBackgroundForThisCard({background: "#eee"})
+    }else{
+      if( nowIsCurrentPlayerTurn ) {
+        setCanBeChosenButton(true)
+      }else{
+        setCanBeChosenButton(false)
+      }
+        
     }
-
-    
 
   }, [playerTurn])
   

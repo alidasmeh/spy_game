@@ -19,7 +19,7 @@ function MainGamePage({gameId, playerId}) {
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false)
   const [isChooseWordModalOpen, setIsChooseWordModalOpen] = useState(false)
   const [targetPlayer, setTargetPlayer] = useState(0)
-  const [trialData, setTrialData] = useState()
+  const [trialData, setTrialData] = useState({})
 
   useEffect(()=>{
     callForPlayers()

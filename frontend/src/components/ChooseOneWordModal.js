@@ -48,8 +48,6 @@ function ChooseOneWordModal({isModalOpen, setIsModalOpen, setIsTrackingModalOpen
                 <Button variant="primary" className='d-block w-100 mb-3' onClick={()=>{handleSubmitWord(word2)}}>{word2}</Button>
 
             </Modal.Body>
-            <Modal.Footer>
-            </Modal.Footer>
         </Modal>
     );
 }

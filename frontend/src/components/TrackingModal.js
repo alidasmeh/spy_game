@@ -16,20 +16,21 @@ function TrackingModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playe
     const handleClose = () => setIsModalOpen(false);
 
     useEffect(()=>{
-        if( data.selected == false ){
-            setWord1(data?.word1)
-            setWord2(data?.word2)
-            setRequirer(data?.player_username)
-            setAnswerer(data?.target_username)
-            setSelected(false)
-        }else{
-            setWord1(data?.word)
-            setAnswerer(data?.target_username)
-            setSelected(true)
-            
+        console.log(data)
+        if( data.hasOwnProperty('selected') ){
+            if( data.selected == false ){
+                setWord1(data?.word1)
+                setWord2(data?.word2)
+                setRequirer(data?.player_username)
+                setAnswerer(data?.target_username)
+                setSelected(false)
+            }else{
+                setWord1(data?.word)
+                setAnswerer(data?.target_username)
+                setSelected(true)
+                
+            }
         }
-       
-
 
     }, [data])
     
