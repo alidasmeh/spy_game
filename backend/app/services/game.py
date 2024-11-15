@@ -1,9 +1,11 @@
 import datetime
-from fastapi import Depends
-from models.db import get_db_connection, connect_to_db
+import random
+
+from fastapi import Depends, FastAPI, Depends, HTTPException, status
 import asyncpg
 from asyncpg import Connection
-from fastapi import FastAPI, Depends, HTTPException, status
+
+from models.db import get_db_connection, connect_to_db
 # import helpers
 
 import logging
@@ -70,7 +72,8 @@ async def who_is_turn_by_group_id(game_id):
     if len(last_round) == 0:
         # create new round
         target_word_id = await find_word_for_this_group(conn, game_id)
-        last_round = await conn.fetch("INSERT INTO rounds (target_word_id, game_id) VALUES ($1, $2) RETURNING round_id ", str(target_word_id), str(game_id))
+        spy_id = await find_an_spy_for_this_round(conn, game_id)
+        last_round = await conn.fetch(f"INSERT INTO rounds (target_word_id, game_id, spy_id) VALUES ({target_word_id}, {game_id}, {spy_id}) RETURNING round_id")
         trials_for_current_round = [] # round is just created so there is no trial for that. 
 
     else: 
@@ -130,3 +133,9 @@ async def find_word_for_this_group(conn, game_id):
         return "not found"
 
     return target_word
+
+async def find_an_spy_for_this_round(conn, game_id):
+    players = await conn.fetch("SELECT player_id FROM players WHERE game_id=$1 ORDER BY player_id ASC", str(game_id))
+    spy = random.choice(players)
+    return spy['player_id']
+    
