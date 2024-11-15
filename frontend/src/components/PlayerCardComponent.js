@@ -16,11 +16,11 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     const nowIsCurrentPlayerTurn = thisPlayerId == playerTurn
     const nowThisCardIsTurn = playerInfo.player_id == playerTurn
 
-    console.info(`username : ${playerInfo.username} for player turn ${playerTurn}`, {
-      thisCardIsForTheCurrentPlayer,
-      nowIsCurrentPlayerTurn,
-      nowThisCardIsTurn
-    })
+    // console.info(`username : ${playerInfo.username} for player turn ${playerTurn}`, {
+    //   thisCardIsForTheCurrentPlayer,
+    //   nowIsCurrentPlayerTurn,
+    //   nowThisCardIsTurn
+    // })
 
     if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#eee"})
     if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "white"})

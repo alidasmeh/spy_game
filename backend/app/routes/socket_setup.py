@@ -64,6 +64,27 @@ async def get_players_for_group(sid, data):
     for player in players:
         await sio_server.emit("list of players", players, to=player['socket_id'])  
 
+
+@sio_server.on("get word spy status")
+async def get_word_spy_status(sid, data):
+    logger.info(f'get_word_spy_status is called: {sid}')
+    logger.info(data)
+    word, spy_id = await services.game.get_word_spy_status(data['game_id'])
+    players = await services.game.get_players_by_group_id(data['game_id'])
+    for player in players:
+        logger.info('spy_id, player[player_id]')
+        logger.info(spy_id)
+        logger.info(player['player_id'])
+
+        sending_word = word
+        if str(player['player_id']) == str(spy_id):
+            sending_word = ""
+
+        logger.info('sending_word')
+        logger.info(sending_word)
+
+        await sio_server.emit("word or spy", {"word" : sending_word}, to=player['socket_id'])
+
 @sio_server.on("who is turn")
 async def who_is_turn(sid, data):
     logger.info(f'who_is_turn is called: {sid}')

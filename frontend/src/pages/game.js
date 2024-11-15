@@ -20,6 +20,7 @@ function MainGamePage({gameId, playerId}) {
   const [isChooseWordModalOpen, setIsChooseWordModalOpen] = useState(false)
   const [targetPlayer, setTargetPlayer] = useState(0)
   const [trialData, setTrialData] = useState({})
+  const [wordOrSpy, setWordOrSpy] = useState('')
 
   useEffect(()=>{
     callForPlayers()
@@ -27,6 +28,7 @@ function MainGamePage({gameId, playerId}) {
     socket.on('list of players', async (data)=>{
         // data is players list
         setPlayers(data)
+        getWordOrSpy()
     })
 
     socket.on('turn is for playerid', async (data)=>{
@@ -60,6 +62,16 @@ function MainGamePage({gameId, playerId}) {
         setIsModalOpen(false)
       }, 3000)
     })
+
+    socket.on("word or spy", async(data)=>{
+      console.log('word or spy')
+      console.log(data)
+      if(data.word.length == 0){
+        setWordOrSpy("you are Spy.")
+      }else{
+        setWordOrSpy(`Target word is : ${data.word}`)
+      }
+    })
   }, [gameId])
 
   const callForPlayers = async()=>{
@@ -71,9 +83,13 @@ function MainGamePage({gameId, playerId}) {
     await socket.emit("who is turn", {game_id: gameId})
   }
 
+  const getWordOrSpy = async ()=>{
+    await socket.emit("get word spy status", {game_id: gameId})
+  }
+
   return (
     <Container className='mt-5'>
-      <h1 className='text-center'>Main Game</h1> 
+      <h1 className='text-center'>{wordOrSpy}</h1> 
       <Row>
         {
           players.map((player)=> (

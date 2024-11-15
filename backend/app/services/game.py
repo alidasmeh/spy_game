@@ -106,6 +106,11 @@ async def update_trial(trial_id, word):
         logger.error(f"update_trial > Error updating trial chosen_word: {e}")
         return False
 
+async def get_word_spy_status(game_id):
+    conn = await connect_to_db()
+    last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{game_id}' ORDER BY round_id DESC LIMIT 1")
+    word = await conn.fetch(f"SELECT * FROM words WHERE word_id='{last_round[0]['target_word_id']}' ")
+    return  word[0]['target_word'], last_round[0]['spy_id']
 
 def convert_date_object_to_string(original_list):
     player_dicts = []
