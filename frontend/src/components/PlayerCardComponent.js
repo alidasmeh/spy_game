@@ -16,18 +16,33 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     const nowIsCurrentPlayerTurn = thisPlayerId == playerTurn
     const nowThisCardIsTurn = playerInfo.player_id == playerTurn
 
-    if(nowThisCardIsTurn){
-      setBackgroundForThisCard({background: "#d9eeff"})
-    }else if(thisCardIsForTheCurrentPlayer){
-      setBackgroundForThisCard({background: "#eee"})
-    }else{
-      if( nowIsCurrentPlayerTurn ) {
-        setCanBeChosenButton(true)
-      }else{
-        setCanBeChosenButton(false)
-      }
+    console.info(`username : ${playerInfo.username} for player turn ${playerTurn}`, {
+      thisCardIsForTheCurrentPlayer,
+      nowIsCurrentPlayerTurn,
+      nowThisCardIsTurn
+    })
+
+    if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#eee"})
+    if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "white"})
+    if(thisCardIsForTheCurrentPlayer && nowIsCurrentPlayerTurn && nowThisCardIsTurn) setBackgroundForThisCard({background: "#d9eeff"})
+
+    if(!nowThisCardIsTurn && nowIsCurrentPlayerTurn) setCanBeChosenButton(true)
+    if(!nowThisCardIsTurn && !nowIsCurrentPlayerTurn) setCanBeChosenButton(false)
+    if(nowThisCardIsTurn) setCanBeChosenButton(false)
+    // if(!thisCardIsForTheCurrentPlayer && nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setCanBeChosenButton(false)
+      // if(nowThisCardIsTurn){
+    //   setBackgroundForThisCard({background: "#d9eeff"})
+    // }else if(thisCardIsForTheCurrentPlayer){
+    //   setBackgroundForThisCard({background: "#eee"})
+
+    // }else{
+    //   if( nowIsCurrentPlayerTurn ) {
+    //     setCanBeChosenButton(true)
+    //   }else{
+    //     setCanBeChosenButton(false)
+    //   }
         
-    }
+    // }
 
   }, [playerTurn])
   
