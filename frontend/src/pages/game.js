@@ -64,8 +64,6 @@ function MainGamePage({gameId, playerId}) {
     })
 
     socket.on("word or spy", async(data)=>{
-      console.log('word or spy')
-      console.log(data)
       if(data.word.length == 0){
         setWordOrSpy("you are Spy.")
       }else{
