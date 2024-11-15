@@ -43,7 +43,7 @@ function TrackingModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playe
             <Modal.Body>
                 {
                     selected==false && (<>
-                        <p>{requirer} asked {answerer} these two words: </p>
+                        <p><b>{requirer}</b> asked <b>{answerer}</b> these two words: </p>
                         <ol>
                             <li>{word1}</li>
                             <li>{word2}</li>
@@ -53,7 +53,7 @@ function TrackingModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playe
                 }
                 {
                     selected==true && (<>
-                        <p>{answerer} selected {word1} </p>
+                        <p><b>{answerer}</b> selected <b>{word1}</b> </p>
                         <p>Waiting for next player ...</p>
                     </>)
                 }
