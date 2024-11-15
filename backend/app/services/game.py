@@ -95,9 +95,8 @@ async def run_a_trial(data):
 
 async def update_trial(trial_id, word):
     conn = await connect_to_db()
-
     try: 
-        await conn.execute("UPDATE trials SET chosen_word=$1 WHERE trial_id=$2", str(word) , str(trial_id))
+        await conn.execute(f"UPDATE trials SET chosen_word='{word}' WHERE trial_id={trial_id} ")
         return True
     
     except asyncpg.exceptions.PostgresError as e:

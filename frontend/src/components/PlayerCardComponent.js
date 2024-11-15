@@ -29,20 +29,6 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     if(!nowThisCardIsTurn && nowIsCurrentPlayerTurn) setCanBeChosenButton(true)
     if(!nowThisCardIsTurn && !nowIsCurrentPlayerTurn) setCanBeChosenButton(false)
     if(nowThisCardIsTurn) setCanBeChosenButton(false)
-    // if(!thisCardIsForTheCurrentPlayer && nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setCanBeChosenButton(false)
-      // if(nowThisCardIsTurn){
-    //   setBackgroundForThisCard({background: "#d9eeff"})
-    // }else if(thisCardIsForTheCurrentPlayer){
-    //   setBackgroundForThisCard({background: "#eee"})
-
-    // }else{
-    //   if( nowIsCurrentPlayerTurn ) {
-    //     setCanBeChosenButton(true)
-    //   }else{
-    //     setCanBeChosenButton(false)
-    //   }
-        
-    // }
 
   }, [playerTurn])
   
