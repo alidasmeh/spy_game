@@ -106,6 +106,18 @@ async def update_trial(trial_id, word):
         logger.error(f"update_trial > Error updating trial chosen_word: {e}")
         return False
 
+async def get_number_of_trials_for_this_round(trial_id):
+    conn = await connect_to_db()
+    current_trial = await conn.fetch(f"SELECT * FROM trials WHERE trial_id='{trial_id}'")
+    trials_in_current_round = await conn.fetch(f"SELECT * FROM trials WHERE round_id='{current_trial[0]['round_id']}'")
+
+    return len(trials_in_current_round)
+
+async def get_last_round_by_group_id(game_id):
+    conn = await connect_to_db()
+    last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{game_id}' ORDER BY round_id DESC LIMIT 1")
+    return last_round[0]
+
 async def get_word_spy_status(game_id):
     conn = await connect_to_db()
     last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{game_id}' ORDER BY round_id DESC LIMIT 1")
