@@ -7,6 +7,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+NUMBER_OF_PLAYERS = 5
+
 sio_server = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins=[]
@@ -141,7 +143,7 @@ async def vote_to_choose_spy(sid, data):
         number_of_vote_for_current_round = 1
 
     # check if votes are 4 for this round_id
-    if number_of_vote_for_current_round == 4:
+    if number_of_vote_for_current_round == NUMBER_OF_PLAYERS:
         output = {"decision": make_decision(vote_round_list, last_round_id)}
         # delete the round
         vote_round_list = list(filter(lambda x: x["round_id"] != last_round_id, vote_round_list))
@@ -158,7 +160,7 @@ def make_decision(vote_round_list, last_round_id):
         if vote_round['round_id'] == last_round_id:
             for vote in vote_round['votes']:
                 decision = decision + vote['vote']
-    if decision >= 2:
+    if decision >= 3:
         return True
     else: 
         return False

@@ -12,6 +12,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+NUMBER_OF_PLAYERS = 5
+
 async def find_an_empty_game():
     conn = await connect_to_db()
     
@@ -39,7 +41,7 @@ async def create_new_game():
     conn = await connect_to_db()
 
     try:
-        inserted_id = await conn.fetchval("INSERT INTO games (number_of_players) VALUES ($1) RETURNING game_id", 4)
+        inserted_id = await conn.fetchval("INSERT INTO games (number_of_players) VALUES ($1) RETURNING game_id", NUMBER_OF_PLAYERS)
         return {"status": True, "game_id": inserted_id}
 
     except Exception as e:
@@ -87,7 +89,7 @@ async def who_is_turn_by_group_id(game_id):
     if len(trials_for_current_round) == 0:
         return players_for_current_game[0]['player_id']
     
-    index_for_finding_player_turn = len(trials_for_current_round)%4
+    index_for_finding_player_turn = len(trials_for_current_round)%NUMBER_OF_PLAYERS
     return players_for_current_game[index_for_finding_player_turn]['player_id']
 
 async def run_a_trial(data):

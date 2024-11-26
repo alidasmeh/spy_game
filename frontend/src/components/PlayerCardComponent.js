@@ -39,7 +39,7 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
   
 
   return (
-    <div className='mt-5 col-lg-3' >
+    <div className='mt-5 col' >
       <div className='card p-3' style={{...backgroundForThisCard}}>
         <div>
           <div style={styles.imgCicle} ><img src={playerInfo.image_url} style={styles.img}/></div>

@@ -12,6 +12,8 @@ import TrackingModal from '../components/TrackingModal';
 import VotingModal from '../components/VotingModal';
 
 function MainGamePage({gameId, playerId}) {
+  const NumberOfPlayers = 5
+
   const navigate = useNavigate();
 
   const [players, setPlayers] = useState([])
@@ -61,7 +63,7 @@ function MainGamePage({gameId, playerId}) {
 
       setTimeout(async ()=>{
         hideAllModals()
-        if(Number(data['number_of_trials_for_this_round'])%4 == 0){
+        if(Number(data['number_of_trials_for_this_round'])%NumberOfPlayers == 0){
           setIsVotingModalOpen(true)
         }else{
           callForFindingPlayerTurn()
@@ -125,7 +127,7 @@ function MainGamePage({gameId, playerId}) {
   }
   
   return (
-    <Container className='mt-5'>
+    <Container fluid className='mt-5'>
       <h1 className='text-center'>{wordOrSpy}</h1> 
       <Row>
         {
