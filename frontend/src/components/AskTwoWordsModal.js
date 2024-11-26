@@ -9,11 +9,18 @@ import {socket} from '../api/socket'
 function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playerId}) {
     const [word1, setWord1] = useState('');
     const [word2, setWord2] = useState('');
+    const [error, setError] = useState('');
 
     const handleClose = () => setIsModalOpen(false);
     
     const handleSubmit = async () => {
         // Handle form submission with word1 and word2 values
+        if (word1.trim() == word2.trim()){
+            setError('Two words cannot be the same.')
+            return
+        }
+        setError('')
+
         let data = {
             game_id: gameId,
             player_id: playerId,
@@ -52,6 +59,9 @@ function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, pl
                     onChange={(e) => setWord2(e.target.value)}
                 />
                 </Form.Group>
+                <div className='text-center' style={{color: "tomato"}}>
+                    {error}
+                </div>
             </Form>
             </Modal.Body>
             <Modal.Footer>
