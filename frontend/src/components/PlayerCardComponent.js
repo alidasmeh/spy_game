@@ -22,9 +22,14 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     //   nowThisCardIsTurn
     // })
 
-    if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#eee"})
-    if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "white"})
-    if(thisCardIsForTheCurrentPlayer && nowIsCurrentPlayerTurn && nowThisCardIsTurn) setBackgroundForThisCard({background: "#d9eeff"})
+    if(nowThisCardIsTurn) {
+      setBackgroundForThisCard({background: "#d9eeff"})
+    }else{
+      setBackgroundForThisCard({background: "white"})
+      if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#eee"})
+      if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "white"})
+
+    }
 
     if(!nowThisCardIsTurn && nowIsCurrentPlayerTurn) setCanBeChosenButton(true)
     if(!nowThisCardIsTurn && !nowIsCurrentPlayerTurn) setCanBeChosenButton(false)
