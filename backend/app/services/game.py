@@ -123,6 +123,11 @@ async def get_last_round_by_group_id(game_id):
 async def get_word_spy_status(game_id):
     conn = await connect_to_db()
     last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{game_id}' ORDER BY round_id DESC LIMIT 1")
+    
+    # Because the round may not have been made by the time this line is called, this query must be repeated. 
+    while len(last_round)==0: 
+        last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{game_id}' ORDER BY round_id DESC LIMIT 1")
+    
     word = await conn.fetch(f"SELECT * FROM words WHERE word_id='{last_round[0]['target_word_id']}' ")
     return  word[0]['target_word'], last_round[0]['spy_id']
 

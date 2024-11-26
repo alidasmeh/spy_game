@@ -22,7 +22,7 @@ function MainGamePage({gameId, playerId}) {
   const [isChooseWordModalOpen, setIsChooseWordModalOpen] = useState(false)
   const [targetPlayer, setTargetPlayer] = useState(0)
   const [trialData, setTrialData] = useState({})
-  const [wordOrSpy, setWordOrSpy] = useState('')
+  const [wordOrSpy, setWordOrSpy] = useState('loading...')
   const [chooseSpy, setChooseSpy] = useState(false)
   const [decisionText, setDecisionText] = useState('')
 
