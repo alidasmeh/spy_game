@@ -34,7 +34,7 @@ function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, pl
             <Modal.Body>
             <Form>
                 <Form.Group className="mb-3" controlId="word1">
-                <Form.Label>Word One</Form.Label>
+                <Form.Label>First word</Form.Label>
                 <Form.Control
                     type="text"
                     placeholder=""
@@ -44,7 +44,7 @@ function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, pl
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="word2">
-                <Form.Label>Word One</Form.Label>
+                <Form.Label>Second word</Form.Label>
                 <Form.Control
                     type="text"
                     placeholder=""
