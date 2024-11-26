@@ -29,6 +29,7 @@ CREATE TABLE rounds (
     target_word_id VARCHAR(10) NOT NULL,
     spy_id VARCHAR(10) NOT NULL,
     game_id VARCHAR(10) NOT NULL,
+    unique_complex VARCHAR(10) UNIQUE NOT NULL ,
     done VARCHAR(10) NOT NULL DEFAULT 'false',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -66,20 +66,22 @@ async def get_players_by_group_id(game_id):
 
 async def who_is_turn_by_group_id(game_id):
     conn = await connect_to_db()
-
-    last_round = await conn.fetch("SELECT * FROM rounds WHERE game_id=$1 ORDER BY round_id DESC LIMIT 1", str(game_id))
     
+    last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{str(game_id)}' ORDER BY round_id DESC LIMIT 1")
+
     if len(last_round) == 0:
         # create new round
         target_word_id = await find_word_for_this_group(conn, game_id)
         spy_id = await find_an_spy_for_this_round(conn, game_id)
-        last_round = await conn.fetch(f"INSERT INTO rounds (target_word_id, game_id, spy_id) VALUES ({target_word_id}, {game_id}, {spy_id}) RETURNING round_id")
+        unique_complex = f"{target_word_id}{game_id}"
+        # in this scenario I do not need to get the round_id
+        await conn.fetch(f'INSERT INTO rounds (target_word_id, game_id, spy_id, unique_complex) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', str(target_word_id), str(game_id), str(spy_id), unique_complex)
         trials_for_current_round = [] # round is just created so there is no trial for that. 
-
+    
     else: 
         last_round_id = last_round[0]['round_id']
         trials_for_current_round = await conn.fetch("SELECT * FROM trials WHERE round_id=$1 ORDER BY trial_id ASC", str(last_round_id))
-    
+        
     players_for_current_game = await conn.fetch("SELECT player_id FROM players WHERE game_id=$1 ORDER BY player_id ASC", str(game_id))
 
     if len(trials_for_current_round) == 0:
