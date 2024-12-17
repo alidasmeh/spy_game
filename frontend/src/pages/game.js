@@ -10,6 +10,7 @@ import AskTwoWordsModal from '../components/AskTwoWordsModal';
 import ChooseOneWordModal from '../components/ChooseOneWordModal';
 import TrackingModal from '../components/TrackingModal';
 import VotingModal from '../components/VotingModal';
+import EnterTargetWord from '../components/EnterTargetWord';
 
 function MainGamePage({gameId, playerId}) {
   const NumberOfPlayers = 5
@@ -22,6 +23,7 @@ function MainGamePage({gameId, playerId}) {
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false)
   const [isChooseWordModalOpen, setIsChooseWordModalOpen] = useState(false)
+  const [isEnterTargetWordModalOpen, setIsEnterTargetWordModalOpen] = useState(false)
   const [targetPlayer, setTargetPlayer] = useState(0)
   const [trialData, setTrialData] = useState({})
   const [wordOrSpy, setWordOrSpy] = useState('loading...')
@@ -92,11 +94,19 @@ function MainGamePage({gameId, playerId}) {
           votingModalReset()
         }, 3000)
       }else{
-        setChooseSpy(true)
-        setDecisionText("")
+
+        console.info(wordOrSpy)
+        
+        if(wordOrSpy == "you are Spy."){
+          hideAllModals()
+          setIsEnterTargetWordModalOpen(true)
+        }else{
+          setChooseSpy(true)
+          setDecisionText("")  
+        }
       }
     })
-  }, [gameId])
+  }, [gameId, wordOrSpy])
 
   const callForPlayers = async()=>{
     console.log('here inside callForPlayers')
@@ -148,6 +158,7 @@ function MainGamePage({gameId, playerId}) {
       <ChooseOneWordModal isModalOpen={isChooseWordModalOpen} setIsTrackingModalOpen={setIsTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <TrackingModal isModalOpen={isTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <VotingModal decisionText={decisionText} chooseSpy={chooseSpy} isModalOpen={isVotingModalOpen} setIsModalOpen={setIsVotingModalOpen} players={players} gameId={gameId} playerId={playerId}/>
+      <EnterTargetWord isModalOpen={isEnterTargetWordModalOpen} setIsModalOpen={setIsEnterTargetWordModalOpen} gameId={gameId} playerId={playerId}/>
     </Container>
   );
 }
