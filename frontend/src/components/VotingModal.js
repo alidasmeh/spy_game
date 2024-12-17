@@ -20,7 +20,8 @@ function VotingModal({isModalOpen, setIsModalOpen, players, playerId, gameId, ch
 
     const handleSelectSpy = async (value)=>{
         setWaiting(true)
-        alert(value)
+        await socket.emit("point the spy", {"game_id": gameId, "player_id": playerId, "vote": value})
+        // alert(value)
     }
 
     useEffect(()=>{
