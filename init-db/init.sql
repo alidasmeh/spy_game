@@ -45,4 +45,4 @@ CREATE TABLE trials (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO words (target_word) VALUES ('car wheel'), ('cruise');
+INSERT INTO words (target_word) VALUES ('car wheel'), ('cruise'), ('gun'), ('battery'), ('flower'), ('spoon');
