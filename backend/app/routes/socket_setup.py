@@ -154,6 +154,85 @@ async def vote_to_choose_spy(sid, data):
         for player in players:
             await sio_server.emit("decision is made for voting", output, to=player['socket_id'])  
 
+point_spy_round_list = [] # {round_id: , votes: [{ player_id: , vote:  }]}
+@sio_server.on("point the spy")
+async def point_the_spy(sid, data):
+    global point_spy_round_list
+
+    logger.info(f'point_the_spy is called: {sid}')
+    last_round = await services.game.get_last_round_by_group_id(data['game_id'])
+    last_round_id = last_round['round_id']
+
+    the_vote_is_appended = False
+    number_of_vote_for_current_round = 0
+    for vote_round in point_spy_round_list:
+        if vote_round['round_id'] == last_round_id:
+            vote_round['votes'].append({"player_id": data['player_id'], "vote": data['vote']})
+            the_vote_is_appended = True
+            number_of_vote_for_current_round = len(vote_round['votes'])
+
+    if the_vote_is_appended == False:
+        # it is the first vote is submitted for this round
+        point_spy_round_list.append({"round_id": last_round_id, "votes": [{"player_id": data['player_id'], "vote": data['vote']}]})
+
+    if number_of_vote_for_current_round == NUMBER_OF_PLAYERS-1: # because spy does not select ! enter the word.
+        await check_if_all_users_pointed_and_target_word_is_entered(data['game_id'], last_round_id)
+
+guess_for_target_word_list = [] # {round_id: , player_id: , target_word: }
+@sio_server.on("enter target word by spy")
+async def enter_target_word_by_spy(sid, data):
+    global guess_for_target_word_list
+
+    last_round = await services.game.get_last_round_by_group_id(data['game_id'])
+    last_round_id = last_round['round_id']
+
+    guess_for_target_word_list.append({"round_id": last_round_id , "player_id": data['player_id'], "word": data['word']})
+
+    await check_if_all_users_pointed_and_target_word_is_entered(data['game_id'], last_round_id)
+
+
+
+async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_id):
+    global point_spy_round_list
+    global guess_for_target_word_list
+
+    is_the_target_word_entered = False
+    entered_target_word = ""
+
+    did_every_one_vote = False
+    votes = []
+
+    for guess in guess_for_target_word_list:
+        if guess["round_id"] == round_id:
+            is_the_target_word_entered = True
+            entered_target_word = guess["word"]
+    
+    for vote_round in point_spy_round_list:
+        if vote_round['round_id'] == round_id:
+            if len(vote_round['votes']) == 4:
+                did_every_one_vote = True
+                votes = vote_round['votes']
+
+    if is_the_target_word_entered and did_every_one_vote:
+        logger.info("**************************************************************")
+        logger.info("----------------- ready to annouce winner --------------------")
+        logger.info("check_if_all_users_pointed_and_target_word_is_entered")
+        logger.info(f"is_the_target_word_entered : {is_the_target_word_entered}")
+        logger.info(f"entered_target_word : {entered_target_word}")
+        logger.info(f"did_every_one_vote : {did_every_one_vote}")
+        logger.info(f"votes")
+        logger.info(votes)
+        logger.info("**************************************************************")
+
+        # what is the spy_id
+        # who poited the spy_id
+        # what is the target_word
+        # did spy enter the target word correct
+        
+        # if no one point the SPY ==> SPY win 1 point
+        # if the target word is guessed correctly ==> only SPY win 1 point
+        # if the the target word guess WRONG ==> only people who pointed SPY win 1 point
+
 def make_decision(vote_round_list, last_round_id):
     decision = 0
     for vote_round in vote_round_list:
