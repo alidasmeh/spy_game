@@ -217,21 +217,78 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
         logger.info("**************************************************************")
         logger.info("----------------- ready to annouce winner --------------------")
         logger.info("check_if_all_users_pointed_and_target_word_is_entered")
-        logger.info(f"is_the_target_word_entered : {is_the_target_word_entered}")
         logger.info(f"entered_target_word : {entered_target_word}")
-        logger.info(f"did_every_one_vote : {did_every_one_vote}")
         logger.info(f"votes")
         logger.info(votes)
-        logger.info("**************************************************************")
 
         # what is the spy_id
-        # who poited the spy_id
-        # what is the target_word
-        # did spy enter the target word correct
+        spy_id = await services.game.get_spy_id_for_current_round(game_id)
         
+        # what is the target_word
+        target_word = await services.game.get_target_word_for_current_round(game_id)
+        
+        # did spy enter the target word correct
+        did_spy_guess_correctly = False
+        if entered_target_word == target_word:
+            did_spy_guess_correctly = True
+
+        # who pointed the spy_id
+        list_of_player_ids_who_pointed_spy_id = []
+        for vote in votes:
+            if str(vote['vote']) == str(spy_id):
+                list_of_player_ids_who_pointed_spy_id.append(vote['player_id'])
+        
+        
+
+
+        logger.info(f"len(list_of_player_ids_who_pointed_spy_id) line 244 ")
+        logger.info(len(list_of_player_ids_who_pointed_spy_id) )
+
+        results = []
         # if no one point the SPY ==> SPY win 1 point
+        if len(list_of_player_ids_who_pointed_spy_id) == 0:
+            logger.info(f" line 250 ")
+            results.append({
+                "player_id" : spy_id,
+                "role": "spy",
+                "win": True
+            })
+
         # if the target word is guessed correctly ==> only SPY win 1 point
+        if len(list_of_player_ids_who_pointed_spy_id) > 0:
+            logger.info(f" line 260 ")
+            if did_spy_guess_correctly == True:
+                results.append({
+                    "player_id" : spy_id,
+                    "role": "spy",
+                    "win": True
+                })
         # if the the target word guess WRONG ==> only people who pointed SPY win 1 point
+            else:
+                for player_id in list_of_player_ids_who_pointed_spy_id:
+                    logger.info(f"list_of_player_ids_who_pointed_spy_id line 267 ")
+                    logger.info(player_id)
+                    results.append({
+                        "player_id" : player_id,
+                        "role": "not-spy",
+                        "win": True
+                    })
+                    
+                results.append({
+                    "player_id" : spy_id,
+                    "role": "spy",
+                    "win": False
+                })
+
+        players = await services.game.get_players_by_group_id(game_id)
+        for player in players:
+            await sio_server.emit("round report is ready", results, to=player['socket_id'])
+        
+        logger.info(f"results report ")
+        logger.info(results)
+        logger.info("**************************************************************")             
+            
+
 
 def make_decision(vote_round_list, last_round_id):
     decision = 0

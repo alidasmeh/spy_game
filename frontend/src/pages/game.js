@@ -11,6 +11,7 @@ import ChooseOneWordModal from '../components/ChooseOneWordModal';
 import TrackingModal from '../components/TrackingModal';
 import VotingModal from '../components/VotingModal';
 import EnterTargetWord from '../components/EnterTargetWord';
+import RoundReportModal from '../components/RoundReportModal';
 
 function MainGamePage({gameId, playerId}) {
   const NumberOfPlayers = 5
@@ -24,11 +25,13 @@ function MainGamePage({gameId, playerId}) {
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false)
   const [isChooseWordModalOpen, setIsChooseWordModalOpen] = useState(false)
   const [isEnterTargetWordModalOpen, setIsEnterTargetWordModalOpen] = useState(false)
+  const [isRoundReportModalOpen, setIsRoundReportModalOpen] = useState(false)
   const [targetPlayer, setTargetPlayer] = useState(0)
   const [trialData, setTrialData] = useState({})
   const [wordOrSpy, setWordOrSpy] = useState('loading...')
   const [chooseSpy, setChooseSpy] = useState(false)
   const [decisionText, setDecisionText] = useState('')
+  const [roundReport, setRoundReport] = useState('')
 
   useEffect(()=>{
     callForPlayers()
@@ -106,6 +109,29 @@ function MainGamePage({gameId, playerId}) {
         }
       }
     })
+
+    socket.on("round report is ready", async(data)=>{
+      console.log(`round report is ready : `, data)
+      let reportHTML = ''
+      
+      for(let player of players){
+        for(let outcome of data){
+          if (player.player_id == outcome.player_id){
+            if(outcome.role == 'spy' && outcome.win == true){
+              reportHTML += `<li><b>${player.username}</b> was the spy and could guess the target word currectly. Won 1 point.</li>`
+            }else if(outcome.role == 'spy' && outcome.win == false){
+              reportHTML += `<li><b>${player.username}</b> was the spy and could not guess the target word currectly.</li>`
+            }else if(outcome.role == 'not-spy' && outcome.win == true){
+              reportHTML += `<li><b>${player.username}</b> won 1 point, because could select the spy correctly and spy did not know the target word. </li>`
+            }
+          }
+        }
+      }
+
+      hideAllModals()
+      setRoundReport(reportHTML)
+      setIsRoundReportModalOpen(true)
+    })
   }, [gameId, wordOrSpy])
 
   const callForPlayers = async()=>{
@@ -129,6 +155,8 @@ function MainGamePage({gameId, playerId}) {
     setIsTrackingModalOpen(false)
     setIsModalOpen(false)
     setIsVotingModalOpen(false)
+    setIsRoundReportModalOpen(false)
+    setIsEnterTargetWordModalOpen(false)
   }
 
   const votingModalReset = ()=>{
@@ -159,6 +187,8 @@ function MainGamePage({gameId, playerId}) {
       <TrackingModal isModalOpen={isTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <VotingModal decisionText={decisionText} chooseSpy={chooseSpy} isModalOpen={isVotingModalOpen} setIsModalOpen={setIsVotingModalOpen} players={players} gameId={gameId} playerId={playerId}/>
       <EnterTargetWord isModalOpen={isEnterTargetWordModalOpen} setIsModalOpen={setIsEnterTargetWordModalOpen} gameId={gameId} playerId={playerId}/>
+      <RoundReportModal isModalOpen={isRoundReportModalOpen} roundReport={roundReport} setIsModalOpen={setIsRoundReportModalOpen} />
+        
     </Container>
   );
 }
