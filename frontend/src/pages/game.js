@@ -131,6 +131,11 @@ function MainGamePage({gameId, playerId}) {
       hideAllModals()
       setRoundReport(reportHTML)
       setIsRoundReportModalOpen(true)
+
+      setTimeout(()=>{
+        setIsRoundReportModalOpen(false)
+        callForFindingPlayerTurn()
+      }, 5000)
     })
   }, [gameId, wordOrSpy])
 

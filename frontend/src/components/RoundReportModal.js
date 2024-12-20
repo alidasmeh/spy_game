@@ -8,16 +8,6 @@ import {socket} from '../api/socket'
 
 function RoundReportModal({isModalOpen, setIsModalOpen, roundReport}) {
     
-    const handleClose = () => setIsModalOpen(false);
-
-    useEffect(()=>{
-        setTimeout(()=>{
-            setIsModalOpen(false)
-        }, 5000)
-
-    }, [])
-    
-
     return (
         <Modal show={isModalOpen}>
             <Modal.Header>

@@ -72,12 +72,7 @@ async def who_is_turn_by_group_id(game_id):
     last_round = await conn.fetch(f"SELECT * FROM rounds WHERE game_id='{str(game_id)}' ORDER BY round_id DESC LIMIT 1")
 
     if len(last_round) == 0:
-        # create new round
-        target_word_id = await find_word_for_this_group(conn, game_id)
-        spy_id = await find_an_spy_for_this_round(conn, game_id)
-        unique_complex = f"{target_word_id}{game_id}"
-        # in this scenario I do not need to get the round_id
-        await conn.fetch(f'INSERT INTO rounds (target_word_id, game_id, spy_id, unique_complex) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', str(target_word_id), str(game_id), str(spy_id), unique_complex)
+        await create_a_new_round(game_id)
         trials_for_current_round = [] # round is just created so there is no trial for that. 
     
     else: 
@@ -158,16 +153,25 @@ async def find_word_for_this_group(conn, game_id):
     rounds = await conn.fetch("SELECT * FROM rounds WHERE game_id=$1", str(game_id))
     words = await conn.fetch("SELECT word_id FROM words")
 
-    target_word = ""
-    for word in words: 
-        target_word = word["word_id"]
-        for round in rounds: 
-            if word["word_id"] == round['target_word_id']:
-                target_word = ""
+    target_word = check_word_in_round_existance(words, rounds)
 
     if target_word == "":
         return "not found"
 
+    return target_word
+
+def check_word_in_round_existance(words, rounds):
+    target_word = ""
+
+    for word in words: 
+        target_word = word["word_id"]
+        for round in rounds: 
+            if str(word["word_id"]) == str(round['target_word_id']):
+                target_word = ""
+        
+        if target_word != "":
+            return target_word
+            
     return target_word
 
 async def find_an_spy_for_this_round(conn, game_id):
@@ -175,3 +179,17 @@ async def find_an_spy_for_this_round(conn, game_id):
     spy = random.choice(players)
     return spy['player_id']
     
+async def create_a_new_round(game_id):
+    conn = await connect_to_db()
+
+    # create new round
+    target_word_id = await find_word_for_this_group(conn, game_id)
+    spy_id = await find_an_spy_for_this_round(conn, game_id)
+    unique_complex = f"{target_word_id}{game_id}"
+    logger.info("create_a_new_round")
+    logger.info("target_word_id")
+    logger.info(target_word_id)
+    logger.info("spy_id")
+    logger.info(spy_id)
+    # in this scenario I do not need to get the round_id
+    await conn.fetch(f'INSERT INTO rounds (target_word_id, game_id, spy_id, unique_complex) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', str(target_word_id), str(game_id), str(spy_id), unique_complex)
