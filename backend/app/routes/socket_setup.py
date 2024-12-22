@@ -105,6 +105,7 @@ async def run_a_trial(sid, data):
 
     for player in players:
         await sio_server.emit("trial is run", data, to=player['socket_id'])
+        await sio_server.emit("add new word to list", {"word1": data["word1"], "word2": data["word2"]}, to=player['socket_id'])
 
 @sio_server.on("one word is chosen")
 async def temp(sid, data):

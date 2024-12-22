@@ -6,7 +6,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import {socket} from '../api/socket'
 
 
-function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playerId}) {
+function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, playerId, listOfUsedWords}) {
     const [word1, setWord1] = useState('');
     const [word2, setWord2] = useState('');
     const [error, setError] = useState('');
@@ -15,10 +15,16 @@ function AskTwoWordsModal({isModalOpen, setIsModalOpen, targetPlayer, gameId, pl
     
     const handleSubmit = async () => {
         // Handle form submission with word1 and word2 values
+        if( listOfUsedWords.includes(word1.trim()) || listOfUsedWords.includes(word2.trim()) ){
+            setError('You can not use words which has been used by you or others in this round (for this target word).')
+            return
+        }
+
         if (word1.trim() == word2.trim()){
             setError('Two words cannot be the same.')
             return
         }
+        
         setError('')
 
         let data = {

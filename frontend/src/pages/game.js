@@ -33,6 +33,7 @@ function MainGamePage({gameId, playerId}) {
   const [decisionText, setDecisionText] = useState('')
   const [roundReport, setRoundReport] = useState('')
   const [watingVotingModal, setWaitingVotingModal] = useState(false);
+  const [listOfUsedWords, setListOfUsedWords] = useState([]);
 
   useEffect(()=>{
     callForPlayers()
@@ -138,9 +139,14 @@ function MainGamePage({gameId, playerId}) {
       setTimeout(()=>{
         setIsRoundReportModalOpen(false)
         callForFindingPlayerTurn()
+        setListOfUsedWords([]) // clear the list for the next round and new target word.
       }, 5000)
     })
-  }, [gameId, wordOrSpy, isEnterTargetWordModalOpen])
+
+    socket.on("add new word to list", async(data)=>{
+      setListOfUsedWords([...listOfUsedWords, data.word1, data.word2]);
+    })
+  }, [gameId, wordOrSpy, isEnterTargetWordModalOpen, listOfUsedWords])
 
   const callForPlayers = async()=>{
     console.log('here inside callForPlayers')
@@ -192,7 +198,7 @@ function MainGamePage({gameId, playerId}) {
       </Row>
 
       
-      <AskTwoWordsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
+      <AskTwoWordsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId} listOfUsedWords={listOfUsedWords}/>
       <ChooseOneWordModal isModalOpen={isChooseWordModalOpen} setIsTrackingModalOpen={setIsTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <TrackingModal isModalOpen={isTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <VotingModal decisionText={decisionText} chooseSpy={chooseSpy} isModalOpen={isVotingModalOpen} setIsModalOpen={setIsVotingModalOpen} players={players} gameId={gameId} playerId={playerId} watingVotingModal={watingVotingModal} setWaitingVotingModal={setWaitingVotingModal}/>
