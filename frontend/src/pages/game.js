@@ -129,7 +129,9 @@ function MainGamePage({gameId, playerId}) {
           }
         }
       }
-      reportHTML += "<p>Others did not point the spy. Got no point.</p>";
+      reportHTML += "<br/>"
+      reportHTML += "<br/>"
+      reportHTML += "<p>Other players did not point the spy, did not win any.</p>";
       reportHTML += "<p class='text-center'>be ready for the next round, new target word ...</p>";
 
       hideAllModals()
