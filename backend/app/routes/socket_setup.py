@@ -229,6 +229,8 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
         
         # did spy enter the target word correct
         did_spy_guess_correctly = False
+        logger.info(f"target_word {target_word}")
+        logger.info(f"entered_target_word {entered_target_word}")
         if entered_target_word == target_word:
             did_spy_guess_correctly = True
 

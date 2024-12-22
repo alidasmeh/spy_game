@@ -135,8 +135,9 @@ async def get_spy_id_for_current_round(game_id):
 
 async def get_target_word_for_current_round(game_id):
     conn = await connect_to_db()
-    target_word = await find_word_for_this_group(conn, game_id)
-    return target_word
+    last_round = await get_last_round_by_group_id(game_id)
+    word = await conn.fetch(f"SELECT target_word FROM words WHERE word_id={last_round['target_word_id']}")
+    return word[0]['target_word']
 
 def convert_date_object_to_string(original_list):
     player_dicts = []

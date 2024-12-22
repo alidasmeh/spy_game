@@ -11,6 +11,12 @@ function EnterTargetWord({isModalOpen, setIsModalOpen, gameId, playerId}) {
     const [error, setError] = useState('');
     const [isSubmit, setIsSubmit] = useState(false);
     
+    useEffect(() => {
+        if (isModalOpen) {
+            setIsSubmit(false);
+        }
+    }, [isModalOpen]);
+
     const handleSubmit = async () => {
         // Handle form submission with word and word2 values
         if (word.trim().length == 0){

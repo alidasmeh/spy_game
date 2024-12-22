@@ -32,6 +32,7 @@ function MainGamePage({gameId, playerId}) {
   const [chooseSpy, setChooseSpy] = useState(false)
   const [decisionText, setDecisionText] = useState('')
   const [roundReport, setRoundReport] = useState('')
+  const [watingVotingModal, setWaitingVotingModal] = useState(false);
 
   useEffect(()=>{
     callForPlayers()
@@ -98,7 +99,7 @@ function MainGamePage({gameId, playerId}) {
         }, 3000)
       }else{
 
-        console.info(wordOrSpy)
+        console.info("wordOrSpy in line 102 Game.js > ", wordOrSpy)
         
         if(wordOrSpy == "you are Spy."){
           hideAllModals()
@@ -127,6 +128,8 @@ function MainGamePage({gameId, playerId}) {
           }
         }
       }
+      reportHTML += "<p>Others did not point the spy. Got no point.</p>";
+      reportHTML += "<p class='text-center'>be ready for the next round, new target word ...</p>";
 
       hideAllModals()
       setRoundReport(reportHTML)
@@ -137,7 +140,7 @@ function MainGamePage({gameId, playerId}) {
         callForFindingPlayerTurn()
       }, 5000)
     })
-  }, [gameId, wordOrSpy])
+  }, [gameId, wordOrSpy, isEnterTargetWordModalOpen])
 
   const callForPlayers = async()=>{
     console.log('here inside callForPlayers')
@@ -162,6 +165,8 @@ function MainGamePage({gameId, playerId}) {
     setIsVotingModalOpen(false)
     setIsRoundReportModalOpen(false)
     setIsEnterTargetWordModalOpen(false)
+    setWaitingVotingModal(false)
+    votingModalReset()
   }
 
   const votingModalReset = ()=>{
@@ -190,7 +195,7 @@ function MainGamePage({gameId, playerId}) {
       <AskTwoWordsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <ChooseOneWordModal isModalOpen={isChooseWordModalOpen} setIsTrackingModalOpen={setIsTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
       <TrackingModal isModalOpen={isTrackingModalOpen} data={trialData} setIsModalOpen={setIsChooseWordModalOpen} targetPlayer={targetPlayer} gameId={gameId} playerId={playerId}/>
-      <VotingModal decisionText={decisionText} chooseSpy={chooseSpy} isModalOpen={isVotingModalOpen} setIsModalOpen={setIsVotingModalOpen} players={players} gameId={gameId} playerId={playerId}/>
+      <VotingModal decisionText={decisionText} chooseSpy={chooseSpy} isModalOpen={isVotingModalOpen} setIsModalOpen={setIsVotingModalOpen} players={players} gameId={gameId} playerId={playerId} watingVotingModal={watingVotingModal} setWaitingVotingModal={setWaitingVotingModal}/>
       <EnterTargetWord isModalOpen={isEnterTargetWordModalOpen} setIsModalOpen={setIsEnterTargetWordModalOpen} gameId={gameId} playerId={playerId}/>
       <RoundReportModal isModalOpen={isRoundReportModalOpen} roundReport={roundReport} setIsModalOpen={setIsRoundReportModalOpen} />
         
