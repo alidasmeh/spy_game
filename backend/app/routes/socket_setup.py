@@ -249,6 +249,7 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
                 "role": "spy",
                 "win": True
             })
+            await services.game.win_one_point(int(spy_id))
 
         # if the target word is guessed correctly ==> only SPY win 1 point
         if len(list_of_player_ids_who_pointed_spy_id) > 0:
@@ -258,6 +259,8 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
                     "role": "spy",
                     "win": True
                 })
+                await services.game.win_one_point(int(spy_id))
+
         # if the the target word guess WRONG ==> only people who pointed SPY win 1 point
             else:
                 for player_id in list_of_player_ids_who_pointed_spy_id:
@@ -266,6 +269,8 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
                         "role": "not-spy",
                         "win": True
                     })
+                    # update scores 
+                    await services.game.win_one_point(player_id)
                     
                 results.append({
                     "player_id" : spy_id,
@@ -280,8 +285,7 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
         logger.info(f"results report ")
         logger.info(results)
         logger.info("**************************************************************")             
-            
-        # update scores 
+                    
         # create new round
         await services.game.create_a_new_round(game_id)
 

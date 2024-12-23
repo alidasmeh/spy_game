@@ -194,3 +194,8 @@ async def create_a_new_round(game_id):
     logger.info(spy_id)
     # in this scenario I do not need to get the round_id
     await conn.fetch(f'INSERT INTO rounds (target_word_id, game_id, spy_id, unique_complex) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', str(target_word_id), str(game_id), str(spy_id), unique_complex)
+
+async def win_one_point(player_id):
+    conn = await connect_to_db()
+    await conn.fetch(f'UPDATE players SET score = score + 1 WHERE player_id = $1', player_id)
+    

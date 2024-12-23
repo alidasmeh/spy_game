@@ -8,6 +8,7 @@ CREATE TABLE players (
     username VARCHAR(50) UNIQUE NOT NULL,
     image_url VARCHAR(255),
     game_id VARCHAR(10),
+    score INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

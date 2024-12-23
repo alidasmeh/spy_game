@@ -50,6 +50,8 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
           <div style={styles.imgCicle} ><img src={playerInfo.image_url} style={styles.img}/></div>
         </div>
         <p className='text-center'>{playerInfo.username} <br/> (player_id : {playerInfo.player_id})</p> 
+        <p className='text-center'>Score : {playerInfo.score}</p> 
+        
 
         {
           showCanBeChosenButton && 
