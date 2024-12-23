@@ -6,6 +6,7 @@ import services.game
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+import asyncio
 
 NUMBER_OF_PLAYERS = 5
 
@@ -287,7 +288,12 @@ async def check_if_all_users_pointed_and_target_word_is_entered(game_id, round_i
         logger.info("**************************************************************")             
                     
         # create new round
-        await services.game.create_a_new_round(game_id)
+        status = await services.game.create_a_new_round(game_id)
+        if (status == "gameover"):
+            await services.game.game_over(game_id)
+            await asyncio.sleep(4)
+            for player in players:
+                await sio_server.emit("gameover", {}, to=player['socket_id'])
 
 
 def make_decision(vote_round_list, last_round_id):

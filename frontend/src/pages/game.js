@@ -148,6 +148,10 @@ function MainGamePage({gameId, playerId}) {
     socket.on("add new word to list", async(data)=>{
       setListOfUsedWords([...listOfUsedWords, data.word1, data.word2]);
     })
+
+    socket.on("gameover", async(data)=>{
+      navigate('/gameover');
+    })
   }, [gameId, wordOrSpy, isEnterTargetWordModalOpen, listOfUsedWords])
 
   const callForPlayers = async()=>{

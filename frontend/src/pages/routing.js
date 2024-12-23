@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import IntroPage from './Intro';
 import RegistrationPage from './Registration';
 import MainGamePage from './Game';
+import GameoverPage from './Gameover';
 
 function RoutingPage() {
 
@@ -19,6 +20,7 @@ function RoutingPage() {
                     <Route index element={<IntroPage />} />
                     <Route path="register" element={<RegistrationPage setGameId={setGameId} setPlayerId={setPlayerId} />} />
                     <Route path="game" element={<MainGamePage gameId={gameId} playerId={playerId}/>} />
+                    <Route path="gameover" element={<GameoverPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>
