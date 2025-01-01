@@ -70,12 +70,54 @@ function RegistrationPage({setGameId, setPlayerId}) {
     return (
         <Container className='mt-5 '>
             <h1 className='text-center'>Toturial</h1> 
-            
+            <p>There are 5 players in this game. One of them is randomly chosen as the spy and the others do not know it. A word is introduced as the target word, which the spy is unaware of but the others will know about. <br/> the goal is finding the Spy by asking 2 words from each other and selecting one.</p>
+
+            <p>1- When it's your turn, you'll see a playground like this, the blue one is you, you can select one person. Anyone but yourself. <br/> Then you can ask the other person to choose one by writing two words related to the target word.</p>
+            <div className='text-center mb-3'>
+                <img src="/img/tutorial/1.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>2- Once you select one of the players, a new window will open asking you to enter two words.<br/> Make sure that the words you enter do not allow the spy to guess the word while conveying the message to others that you know the word.</p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/2.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>3- If someone chooses to ask you for two words, you will see a box similar to the window below with two words written in it and you must choose one based on the target word.<br/> </p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/3.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>4- A window will open between each action you or others take, similar to the one below, reporting what is happening.</p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/4.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>5- After all 5 players have asked for their words, a vote is taken to see if you know the spy. If three people click on the "I know who is the Spu, I want to select." option, you move down to the next step (see step 6).<br/> Otherwise, another round is played with the same word. </p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/5.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>6- If you are not a spy, you will see a window similar to this one, which lists all the players and you must choose one person as a spy.</p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/6.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <p>7- If you were the spy, a window similar to the one below will open where you must enter the word you guessed.</p>
+            <div className='text-center  mb-3'>
+                <img src="/img/tutorial/7.png" style={{width: 500, border: "1px solid #f94c00"}}/>
+            </div>
+
+            <h3>Who and How Win:</h3>
+            <ul>
+                <li>If no one select the Spy, Spy win 1 point.</li>
+                <li>If even one player select the Spy, and Spy does not know the word, that player win 1 point.</li>
+                <li>If players select the Spy, and Spy knows the word, Spy win 1 point.</li>
+            </ul>
 
             <hr/>
             <div className='d-flex justify-content-center align-items-center'>
                 <div style={{ width: '400px' }}>
-                    <h1 className='text-center'>Registration</h1> 
+                    <h1 className='text-center'>Register here ...</h1> 
                     <Form.Group controlId="formUsername">
                         <Form.Label>Username</Form.Label>
                         <Form.Control
