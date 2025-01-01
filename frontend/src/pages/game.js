@@ -92,7 +92,7 @@ function MainGamePage({gameId, playerId}) {
       if(data['decision']==false){
         setChooseSpy(false)
         setDecisionText("Decision is to follow the game to find Spy.")
-        callForFindingPlayerTurn()
+        // callForFindingPlayerTurn()
         setTimeout(()=>{
           console.log(`decision is made for voting call > hideAllModals`)
           hideAllModals()
@@ -100,12 +100,14 @@ function MainGamePage({gameId, playerId}) {
         }, 3000)
       }else{
 
-        console.info("wordOrSpy in line 102 Game.js > ", wordOrSpy)
+        console.info(new Date(), "wordOrSpy in line 102 Game.js > ", wordOrSpy)
         
         if(wordOrSpy == "you are Spy."){
+          console.info(new Date(), "wordOrSpy in line 106 Game.js ")
           hideAllModals()
           setIsEnterTargetWordModalOpen(true)
         }else{
+          console.info(new Date(), "wordOrSpy in line 110 Game.js ")
           setChooseSpy(true)
           setDecisionText("")  
         }
