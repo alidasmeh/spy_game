@@ -14,6 +14,7 @@ function RoutingPage() {
 
 
     return (
+        <div style={{background: "#000"}}>
         <BrowserRouter>
             <Routes>
                 <Route path="/">
@@ -24,6 +25,7 @@ function RoutingPage() {
                 </Route>
             </Routes>
         </BrowserRouter>
+        </div>
     );
 }
 

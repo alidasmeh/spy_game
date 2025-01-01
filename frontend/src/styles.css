@@ -1,0 +1,43 @@
+p, .form-label, li, div{
+    color: #fff;
+}
+h1,h2,h3,h4,h5,h6, .modal-title{
+    color: #f94c00
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.fa-chevron-down {
+    animation: bounce 2s infinite ease-in-out;
+}
+
+.form-control {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    border-radius: 0;
+    color: white;
+}
+.form-control:focus{
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    border-radius: 0;
+    color: white;
+}
+.btn {
+    border-radius: 0;
+}
+
+.form-control:disabled{
+    background-color: transparent;
+}
+
+.modal-content{
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 0;
+}

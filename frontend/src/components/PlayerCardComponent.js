@@ -23,11 +23,11 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
     // })
 
     if(nowThisCardIsTurn) {
-      setBackgroundForThisCard({background: "#d9eeff"})
+      setBackgroundForThisCard({background: "#0066CC"})
     }else{
-      setBackgroundForThisCard({background: "white"})
-      if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#eee"})
-      if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "white"})
+      setBackgroundForThisCard({background: "#9b9b9b"})
+      if(thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#565656"})
+      if(!thisCardIsForTheCurrentPlayer && !nowIsCurrentPlayerTurn && !nowThisCardIsTurn) setBackgroundForThisCard({background: "#9b9b9b"})
 
     }
 
@@ -56,7 +56,7 @@ function PlayerCardComponent({playerInfo, thisPlayerId, setTargetPlayer, setIsMo
         {
           showCanBeChosenButton && 
           (
-            <Button variant='primary' onClick={()=>{askThisUser(playerInfo.player_id)}}>Ask This Player</Button>
+            <Button style={{background: "#E60000", borderColor: "#E60000"}} onClick={()=>{askThisUser(playerInfo.player_id)}}>Ask This Player</Button>
           )
         }
       </div>

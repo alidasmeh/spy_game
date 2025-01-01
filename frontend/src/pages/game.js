@@ -189,7 +189,10 @@ function MainGamePage({gameId, playerId}) {
   }
   
   return (
-    <Container fluid className='mt-5'>
+    <Container fluid className=''>
+      <div style={{borderBottom: "1px solid gray", marginBottom: 12, fontSize: 30, color: "#f94c00"}}>
+        <img src="/img/logo.webp" style={{width: 60}}/> Spy Game
+      </div>
       <h1 className='text-center'>{wordOrSpy}</h1> 
       <Row>
         {
