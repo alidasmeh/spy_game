@@ -26,6 +26,22 @@ async def create_new_user(username, img, sid):
 async def update_game_id(player_id, game_id):
     conn = await connect_to_db()
 
+
+    # it is not finilized ! will be deleted later. 
+    temp_images = ['/img/avatars/1.jpg', '/img/avatars/2.jpg', '/img/avatars/3.jpg','/img/avatars/4.jpg', '/img/avatars/5.jpg', '/img/avatars/6.jpg']
+    
+    players = await conn.fetch("SELECT player_id FROM players WHERE game_id=$1", str(game_id))
+    required_idnex = len(players)-1 
+   
+    try :
+        await conn.execute("UPDATE players SET image_url=$1 WHERE player_id=$2", temp_images[required_idnex], player_id)
+
+    except asyncpg.exceptions.PostgresError as e:
+        logger.error(f"update_game_id > Error updating player image_url game_id: {e}")
+
+
+
+
     try :
         await conn.execute("UPDATE players SET game_id=$1 WHERE player_id=$2", str(game_id) ,player_id)
         return True
