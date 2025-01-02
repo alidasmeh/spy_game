@@ -14,7 +14,7 @@ function RoutingPage() {
 
 
     return (
-        <div style={{background: "#000"}}>
+        <div style={{background: "#000"}} className='mb-5'>
         <BrowserRouter>
             <Routes>
                 <Route path="/">
